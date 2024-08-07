@@ -38,6 +38,7 @@ GEM
     parser (3.3.4.0)
       ast (~> 2.4.1)
       racc
+    pg (1.5.7)
     public_suffix (6.0.1)
     puma (6.4.2)
       nio4r (~> 2.0)
@@ -112,6 +113,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
+  pg
   puma
   rack
   rackup

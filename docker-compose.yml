@@ -3,21 +3,27 @@ services:
     image: ruby:3.3.4
     working_dir: /app/medical-exams
     command: bash -c "bundle install && ruby server.rb"
+    depends_on:
+      - db
     ports:
       - "3000:3000"
     volumes:
       - .:/app/medical-exams
       - rubygems:/usr/local/bundle
+    environment:
+      - DATABASE_URL=db
 
   test:
     image: ruby:3.3.4
     working_dir: /app/medical-exams
     command: bash -c "bundle install && bundle exec rspec"
+    depends_on:
+      - db-test
     volumes:
       - .:/app/medical-exams
       - rubygems:/usr/local/bundle
     environment:
-      - RACK_ENV=test
+      - DATABASE_URL=db
     networks:
       test:
 
@@ -28,10 +34,29 @@ services:
     volumes:
       - .:/app/medical-exams
       - rubygems:/usr/local/bundle
-    environment:
-      - RACK_ENV=test
     networks:
       test:
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: medical-exams
+    ports:
+      - "5432:5432"
+    
+  db-test:
+    image: postgres:latest
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: medical-exams
+    ports:
+      - "5432:5432"
+    networks:
+      test:
+        aliases:
+          - db
 
 volumes:
   rubygems:

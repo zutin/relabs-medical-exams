@@ -7,6 +7,16 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:latest
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: medical-exams
+        ports:
+          - "5432:5432"
+    env:
+      DATABASE_URL: localhost
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
