@@ -1,0 +1,27 @@
+require:
+  - rubocop-capybara
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.3.4
+  Exclude:
+  - 'bin/**/*'
+  - 'vendor/**/*'
+  - 'db/**/*'
+  - 'config/**/*'
+  - 'script/**/*'
+  - 'spec/spec_helper.rb'
+  SuggestExtensions: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Metrics/BlockLength:
+  AllowedMethods: ['describe', 'context', 'feature', 'scenario', 'let', 'it']

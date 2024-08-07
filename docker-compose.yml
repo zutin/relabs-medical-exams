@@ -20,8 +20,18 @@ services:
       - RACK_ENV=test
     networks:
       test:
-        aliases:
-          - web
+
+  lint:
+    image: ruby:3.3.4
+    working_dir: /app/medical-exams
+    command: bash -c "bundle install && bundle exec rubocop"
+    volumes:
+      - .:/app/medical-exams
+      - rubygems:/usr/local/bundle
+    environment:
+      - RACK_ENV=test
+    networks:
+      test:
 
 volumes:
   rubygems:

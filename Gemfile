@@ -8,4 +8,7 @@ gem 'sinatra'
 group :development, :test do
   gem 'capybara'
   gem 'rspec'
+  gem 'rubocop', '~> 1.65', require: false
+  gem 'rubocop-capybara'
+  gem 'rubocop-rspec'
 end
