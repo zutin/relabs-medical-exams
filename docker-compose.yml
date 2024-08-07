@@ -9,5 +9,22 @@ services:
       - .:/app/medical-exams
       - rubygems:/usr/local/bundle
 
+  test:
+    image: ruby:3.3.4
+    working_dir: /app/medical-exams
+    command: bash -c "bundle install && bundle exec rspec"
+    volumes:
+      - .:/app/medical-exams
+      - rubygems:/usr/local/bundle
+    environment:
+      - RACK_ENV=test
+    networks:
+      test:
+        aliases:
+          - web
+
 volumes:
   rubygems:
+
+networks:
+  test:

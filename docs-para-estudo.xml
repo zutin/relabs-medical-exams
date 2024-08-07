@@ -1,0 +1,12 @@
+Imagens do Docker
+https://hub.docker.com/_/ruby
+
+Integrar RSpec e Capybara
+https://sinatrarb.com/testing.html
+https://www.campuscode.com.br/conteudos/rspec-com-ruby-puro
+
+Incluir pastas customizadas para serem encontradas no RSpec
+https://stackoverflow.com/questions/16954989/how-to-include-lib-directory-in-rspec-tests
+
+Conexões do Postgres
+https://www.rubydoc.info/gems/pg/PG/Connection
