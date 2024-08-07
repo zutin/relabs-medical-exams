@@ -1,0 +1,13 @@
+services:
+  web:
+    image: ruby:3.3.4
+    working_dir: /app/medical-exams
+    command: bash -c "bundle install && ruby server.rb"
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app/medical-exams
+      - rubygems:/usr/local/bundle
+
+volumes:
+  rubygems:
