@@ -33,7 +33,7 @@ def create_patients_table(conn)
     cpf VARCHAR(14) UNIQUE NOT NULL,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    birth_date DATE NOT NULL,
+    birthday DATE NOT NULL,
     address VARCHAR(100) NOT NULL,
     city VARCHAR(100) NOT NULL,
     state VARCHAR(100) NOT NULL
