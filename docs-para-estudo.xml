@@ -10,3 +10,6 @@ https://stackoverflow.com/questions/16954989/how-to-include-lib-directory-in-rsp
 
 Conexões do Postgres
 https://www.rubydoc.info/gems/pg/PG/Connection
+
+Problema de SQL Injection
+https://stackoverflow.com/questions/52488876/multiple-insert-in-parametrized-statement-with-pg-gem

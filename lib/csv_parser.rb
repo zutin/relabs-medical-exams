@@ -1,11 +1,11 @@
 require 'csv'
 
-class CsvReader
+class CsvParser
   def initialize(file)
     @file = file
   end
 
-  def read
+  def parse
     rows = CSV.read(@file, col_sep: ';', headers: true)
     data = { 'patients' => [], 'doctors' => [], 'exams' => [] }
 
@@ -72,7 +72,8 @@ class CsvReader
     {
       'crm' => row[7],
       'crm_state' => row[8],
-      'name' => row[9]
+      'name' => row[9],
+      'email' => row[10]
     }
   end
 

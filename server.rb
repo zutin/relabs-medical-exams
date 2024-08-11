@@ -1,18 +1,12 @@
 require 'sinatra'
+require './lib/data_importer'
 require './lib/database'
-require './lib/csvreader'
-require './lib/patient'
 
 set :bind, '0.0.0.0'
 set :port, 3000
 
 get '/' do
   'Rebase Labs!'
-end
-
-get '/read' do
-  content_type :json
-  CsvReader.new('./data.csv').read
 end
 
 get '/createdb' do
@@ -25,26 +19,16 @@ get '/dropdb' do
   'Database dropped!'
 end
 
-get '/trytosave' do
-  rows = CSV.read('./data.csv', col_sep: ';', headers: true)
-
-  rows.each do |row|
-    test = Patient.new(
-      cpf: row[0],
-      name: row[1],
-      email: row[2],
-      birthday: row[3],
-      address: row[4],
-      city: row[5],
-      state: row[6]
-    )
-    test.save
-  end
-
-  'Data saved!'
+get '/import' do
+  content_type :json
+  DataImporter.new('./data.csv').import
 end
 
-get '/patients' do
+get '/data' do
   content_type :json
-  Patient.all.to_json
+  conn = Database.connect
+  data = { 'patients' => conn.exec('SELECT * FROM patients').to_a,
+           'doctors' => conn.exec('SELECT * FROM doctors').to_a }
+  conn.close
+  data.to_json
 end
