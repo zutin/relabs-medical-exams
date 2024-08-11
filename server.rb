@@ -1,12 +1,21 @@
 require 'sinatra'
+require 'rack/handler/puma'
+
 require './lib/data_importer'
 require './lib/database'
+require 'csv'
 
-set :bind, '0.0.0.0'
-set :port, 3000
+get '/tests' do
+  rows = CSV.read('./data.csv', col_sep: ';')
 
-get '/' do
-  'Rebase Labs!'
+  columns = rows.shift
+
+  rows.map do |row|
+    row.each_with_object({}).with_index do |(cell, acc), idx|
+      column = columns[idx]
+      acc[column] = cell
+    end
+  end.to_json
 end
 
 get '/createdb' do
@@ -31,4 +40,12 @@ get '/data' do
            'doctors' => conn.exec('SELECT * FROM doctors').to_a }
   conn.close
   data.to_json
+end
+
+unless ENV['RACK_ENV'] == 'test'
+  Rack::Handler::Puma.run(
+    Sinatra::Application,
+    Port: 3000,
+    Host: '0.0.0.0'
+  )
 end

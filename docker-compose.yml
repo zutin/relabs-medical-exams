@@ -24,6 +24,7 @@ services:
       - rubygems:/usr/local/bundle
     environment:
       - DATABASE_URL=db
+      - RACK_ENV=test
     networks:
       test:
 

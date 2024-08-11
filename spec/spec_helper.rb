@@ -1,13 +1,13 @@
-require 'capybara/rspec'
-require 'capybara/dsl'
+require 'rspec'
 require 'rack/test'
-require './server'
-require './lib/database'
-
-Capybara.app = Sinatra::Application
+require_relative '../server'
+require_relative '../lib/database'
 
 RSpec.configure do |config|
-  config.include Capybara::DSL
+  def app
+    Sinatra::Application
+  end
+
   config.include Rack::Test::Methods
 
   config.before(:each) do
