@@ -7,12 +7,13 @@ class CsvParser
 
   def parse
     rows = CSV.read(@file, col_sep: ';', headers: true)
-    data = { 'patients' => [], 'doctors' => [], 'exams' => [] }
+    data = { 'patients' => [], 'doctors' => [], 'exams' => [], 'results' => [] }
 
     rows.map do |row|
       process_patient(data, row)
       process_doctor(data, row)
-      process_exams_and_results(data, row)
+      process_exams(data, row)
+      process_results(data, row)
     end
 
     data.to_json
@@ -30,10 +31,15 @@ class CsvParser
     data['doctors'] << doctor unless find_doctor(data['doctors'], doctor)
   end
 
-  def process_exams_and_results(data, row)
+  def process_exams(data, row)
     exam = parse_exam(row)
 
     data['exams'] << exam unless find_exam(data['exams'], exam)
+  end
+
+  def process_results(data, row)
+    result = parse_result(row)
+    data['results'] << result
   end
 
   def find_patient(data, patient)
@@ -71,16 +77,16 @@ class CsvParser
 
   def parse_exam(row)
     {
-      'token' => row[11],
-      'date' => row[12],
       'patient_cpf' => row[0],
-      'doctor_crm' => row[7]
+      'doctor_crm' => row[7],
+      'token' => row[11],
+      'date' => row[12]
     }
   end
 
   def parse_result(row)
     {
-      'result_token' => row[11],
+      'exam_token' => row[11],
       'type' => row[13],
       'limits' => row[14],
       'result' => row[15]

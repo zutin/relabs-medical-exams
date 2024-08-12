@@ -17,7 +17,7 @@ RSpec.describe 'CsvParser' do
     end
 
     it 'reads the correct number of results' do
-      expect(data['exams'].map { |exam| exam['results'].length }.sum).to eq(2)
+      expect(data['results'].length).to eq(4)
     end
   end
 end

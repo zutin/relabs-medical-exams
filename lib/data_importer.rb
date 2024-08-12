@@ -4,9 +4,10 @@ require_relative 'database'
 class DataImporter
   def initialize(file)
     data = JSON.parse(CsvParser.new(file).parse)
-    @exams = data['exams'].to_json
     @patients = data['patients'].to_json
     @doctors = data['doctors'].to_json
+    @exams = data['exams'].to_json
+    @results = data['results'].to_json
   end
 
   def import
@@ -14,6 +15,7 @@ class DataImporter
     insert_all_patients(@patients)
     insert_all_doctors(@doctors)
     insert_all_exams(@exams)
+    insert_all_results(@results)
   ensure
     @conn&.close
   end
@@ -59,6 +61,18 @@ class DataImporter
     @conn.exec_params(query, params)
   end
 
+  def insert_all_results(results)
+    results = JSON.parse(results, symbolize_names: true)
+
+    params = parse_results_related_ids(results)
+
+    query = <<~SQL
+      INSERT INTO exam_results (exam_id, exam_type, limits, result) VALUES #{parse_values(results)}
+    SQL
+
+    @conn.exec_params(query, params)
+  end
+
   def parse_exam_related_ids(exams)
     parsed_exams = []
     patient_ids = fetch_patients_ids(exams)
@@ -70,6 +84,16 @@ class DataImporter
       parsed_exams.push(patient_id, doctor_id, exam[:token], exam[:date])
     end
     parsed_exams
+  end
+
+  def parse_results_related_ids(results)
+    parsed_results = []
+    exam_ids = fetch_exams_ids(results)
+    results.each do |result|
+      exam_id = exam_ids[result[:exam_token]]
+      parsed_results.push(exam_id, result[:type], result[:limits], result[:result])
+    end
+    parsed_results
   end
 
   def fetch_patients_ids(exams)
@@ -84,6 +108,13 @@ class DataImporter
     crms_pg_array = '{' + crms.join(',') + '}'
     result = @conn.exec_params('SELECT id, crm FROM doctors WHERE crm = ANY($1::text[])', [crms_pg_array])
     result.each_with_object({}) { |row, hash| hash[row['crm']] = row['id'] }
+  end
+
+  def fetch_exams_ids(results)
+    results = results.map { |result| result[:exam_token] }.uniq
+    results_pg_array = '{' + results.join(',') + '}'
+    result = @conn.exec_params('SELECT id, token FROM exams WHERE token = ANY($1::text[])', [results_pg_array])
+    result.each_with_object({}) { |row, hash| hash[row['token']] = row['id'] }
   end
 
   def parse_values(data)

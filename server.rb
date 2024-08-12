@@ -43,7 +43,8 @@ get '/data' do
   conn = Database.connect
   data = { 'patients' => conn.exec('SELECT * FROM patients').to_a,
            'doctors' => conn.exec('SELECT * FROM doctors').to_a,
-           'exams' => conn.exec('SELECT * FROM exams').to_a }
+           'exams' => conn.exec('SELECT * FROM exams').to_a,
+           'results' => conn.exec('SELECT * FROM exam_results').to_a }
   conn.close
   data.to_json
 end

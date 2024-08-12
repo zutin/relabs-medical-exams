@@ -22,8 +22,8 @@ RSpec.describe 'Database' do
       expect(conn.exec('SELECT COUNT(*) FROM exams')).to be_a(PG::Result)
     end
 
-    it 'creates the exam_types table successfully' do
-      expect(conn.exec('SELECT COUNT(*) FROM exam_types')).to be_a(PG::Result)
+    it 'creates the exam_results table successfully' do
+      expect(conn.exec('SELECT COUNT(*) FROM exam_results')).to be_a(PG::Result)
     end
   end
 
@@ -46,8 +46,8 @@ RSpec.describe 'Database' do
       expect { conn.exec('SELECT COUNT(*) FROM exams') }.to raise_error(PG::UndefinedTable)
     end
 
-    it 'drops the exam_types table successfully' do
-      expect { conn.exec('SELECT COUNT(*) FROM exam_types') }.to raise_error(PG::UndefinedTable)
+    it 'drops the exam_results table successfully' do
+      expect { conn.exec('SELECT COUNT(*) FROM exam_results') }.to raise_error(PG::UndefinedTable)
     end
   end
 end

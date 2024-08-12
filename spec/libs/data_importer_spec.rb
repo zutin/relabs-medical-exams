@@ -25,5 +25,12 @@ RSpec.describe 'DataImporter' do
       conn.close
       expect(count).to eq(2)
     end
+
+    it 'imports the exams results from the csv file' do
+      importer.import
+      count = conn.exec('SELECT * FROM exam_results').count
+      conn.close
+      expect(count).to eq(4)
+    end
   end
 end
