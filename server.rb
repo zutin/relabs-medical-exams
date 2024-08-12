@@ -18,6 +18,11 @@ get '/tests' do
   end.to_json
 end
 
+get '/parse' do
+  content_type :json
+  CsvParser.new('./data.csv').parse
+end
+
 get '/createdb' do
   Database.create
   'Database created!'
@@ -37,7 +42,8 @@ get '/data' do
   content_type :json
   conn = Database.connect
   data = { 'patients' => conn.exec('SELECT * FROM patients').to_a,
-           'doctors' => conn.exec('SELECT * FROM doctors').to_a }
+           'doctors' => conn.exec('SELECT * FROM doctors').to_a,
+           'exams' => conn.exec('SELECT * FROM exams').to_a }
   conn.close
   data.to_json
 end

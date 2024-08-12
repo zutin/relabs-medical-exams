@@ -32,16 +32,8 @@ class CsvParser
 
   def process_exams_and_results(data, row)
     exam = parse_exam(row)
-    result = parse_result(row)
 
-    existing_exam = find_exam(data['exams'], exam)
-
-    if existing_exam
-      existing_exam['results'] << result
-    else
-      exam['results'] << result
-      data['exams'] << exam
-    end
+    data['exams'] << exam unless find_exam(data['exams'], exam)
   end
 
   def find_patient(data, patient)
@@ -82,13 +74,13 @@ class CsvParser
       'token' => row[11],
       'date' => row[12],
       'patient_cpf' => row[0],
-      'doctor_crm' => row[7],
-      'results' => []
+      'doctor_crm' => row[7]
     }
   end
 
   def parse_result(row)
     {
+      'result_token' => row[11],
       'type' => row[13],
       'limits' => row[14],
       'result' => row[15]

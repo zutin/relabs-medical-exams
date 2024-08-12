@@ -11,13 +11,13 @@ class Database
     create_patients_table(conn)
     create_doctors_table(conn)
     create_exams_table(conn)
-    create_exam_types_table(conn)
+    create_exam_results_table(conn)
     conn.close
   end
 
   def self.drop
     conn = Database.connect
-    conn.exec('DROP TABLE IF EXISTS exam_types')
+    conn.exec('DROP TABLE IF EXISTS exam_results')
     conn.exec('DROP TABLE IF EXISTS exams')
     conn.exec('DROP TABLE IF EXISTS doctors')
     conn.exec('DROP TABLE IF EXISTS patients')
@@ -60,11 +60,11 @@ def create_exams_table(conn)
   )')
 end
 
-def create_exam_types_table(conn)
-  conn.exec('CREATE TABLE IF NOT EXISTS exam_types (
+def create_exam_results_table(conn)
+  conn.exec('CREATE TABLE IF NOT EXISTS exam_results (
     id serial PRIMARY KEY,
     exam_id INTEGER REFERENCES exams(id),
-    type_name VARCHAR(100) NOT NULL,
+    exam_type VARCHAR(100) NOT NULL,
     limits VARCHAR(100) NOT NULL,
     result VARCHAR(100) NOT NULL
   )')
