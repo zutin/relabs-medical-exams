@@ -1,4 +1,5 @@
 require_relative 'database'
+require_relative 'data_importer'
 
 class ApiController
   def tests
@@ -17,13 +18,22 @@ class ApiController
   def test(token)
     @conn = Database.connect
     exam = retrieve_exam_by_token(token)
-    return { error: 'Exam not found or invalid token provided' } if exam.ntuples.zero?
+    return nil if exam.ntuples.zero?
 
     parse_exam(exam)
   rescue StandardError => e
     { error: e.message }
   ensure
     @conn&.close
+  end
+
+  def import(file)
+    return { error: 'Invalid file' } unless file&.path&.end_with?('.csv')
+
+    importer = DataImporter.new(file)
+    importer.import
+  rescue StandardError => e
+    { error: e }
   end
 
   private

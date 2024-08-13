@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'CsvParser' do
   describe '#parse' do
-    let(:data) { CsvParser.new('./test.csv').parse }
+    let(:data) { CsvParser.new('spec/fixtures/test.csv').parse }
 
     it 'returns the correct number of patients' do
       expect(data['patients'].length).to eq(2)

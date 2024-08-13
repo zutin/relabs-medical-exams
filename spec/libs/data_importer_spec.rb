@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'DataImporter' do
   describe '#import' do
-    let(:importer) { DataImporter.new('./test.csv') }
+    let(:importer) { DataImporter.new('spec/fixtures/test.csv') }
     let(:conn) { Database.connect }
 
     it 'imports the patients from the csv file' do
