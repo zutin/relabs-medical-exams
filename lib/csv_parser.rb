@@ -16,7 +16,7 @@ class CsvParser
       process_results(data, row)
     end
 
-    data.to_json
+    data
   end
 
   private

@@ -1,31 +1,25 @@
 require 'sinatra'
 require 'rack/handler/puma'
-
-require './lib/data_importer'
-require './lib/database'
-require 'csv'
+require_relative 'lib/api_controller'
+require_relative 'lib/database'
+require_relative 'lib/data_importer'
 
 get '/tests' do
-  rows = CSV.read('./data.csv', col_sep: ';')
-
-  columns = rows.shift
-
-  rows.map do |row|
-    row.each_with_object({}).with_index do |(cell, acc), idx|
-      column = columns[idx]
-      acc[column] = cell
-    end
-  end.to_json
-end
-
-get '/parse' do
+  response = ApiController.new
   content_type :json
-  CsvParser.new('./data.csv').parse
+  response.tests.to_json
+rescue StandardError => e
+  status :internal_server_error
+  { error: e.message }.to_json
 end
 
-get '/createdb' do
-  Database.create
-  'Database created!'
+get '/test/:token' do
+  response = ApiController.new
+  content_type :json
+  response.test(params[:token]).to_json
+rescue StandardError => e
+  status :internal_server_error
+  { error: e.message }.to_json
 end
 
 get '/dropdb' do
@@ -35,18 +29,8 @@ end
 
 get '/import' do
   content_type :json
+  Database.create
   DataImporter.new('./data.csv').import
-end
-
-get '/data' do
-  content_type :json
-  conn = Database.connect
-  data = { 'patients' => conn.exec('SELECT * FROM patients').to_a,
-           'doctors' => conn.exec('SELECT * FROM doctors').to_a,
-           'exams' => conn.exec('SELECT * FROM exams').to_a,
-           'results' => conn.exec('SELECT * FROM exam_results').to_a }
-  conn.close
-  data.to_json
 end
 
 unless ENV['RACK_ENV'] == 'test'

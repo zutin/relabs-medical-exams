@@ -3,7 +3,7 @@ require_relative 'database'
 
 class DataImporter
   def initialize(file)
-    data = JSON.parse(CsvParser.new(file).parse)
+    data = CsvParser.new(file).parse
     @patients = data['patients'].to_json
     @doctors = data['doctors'].to_json
     @exams = data['exams'].to_json
@@ -16,6 +16,8 @@ class DataImporter
     insert_all_doctors(@doctors)
     insert_all_exams(@exams)
     insert_all_results(@results)
+  rescue StandardError => e
+    { error: e.message }
   ensure
     @conn&.close
   end
@@ -97,23 +99,20 @@ class DataImporter
   end
 
   def fetch_patients_ids(exams)
-    cpfs = exams.map { |exam| exam[:patient_cpf] }.uniq
-    cpfs_pg_array = '{' + cpfs.join(',') + '}'
-    result = @conn.exec_params('SELECT id, cpf FROM patients WHERE cpf = ANY($1::text[])', [cpfs_pg_array])
+    cpfs = "{ #{exams.map { |exam| exam[:patient_cpf] }.uniq.join(',')} }"
+    result = @conn.exec_params('SELECT id, cpf FROM patients WHERE cpf = ANY($1::text[])', [cpfs])
     result.each_with_object({}) { |row, hash| hash[row['cpf']] = row['id'] }
   end
 
   def fetch_doctors_ids(exams)
-    crms = exams.map { |exam| exam[:doctor_crm] }.uniq
-    crms_pg_array = '{' + crms.join(',') + '}'
-    result = @conn.exec_params('SELECT id, crm FROM doctors WHERE crm = ANY($1::text[])', [crms_pg_array])
+    crms = "{ #{exams.map { |exam| exam[:doctor_crm] }.uniq.join(',')} }"
+    result = @conn.exec_params('SELECT id, crm FROM doctors WHERE crm = ANY($1::text[])', [crms])
     result.each_with_object({}) { |row, hash| hash[row['crm']] = row['id'] }
   end
 
   def fetch_exams_ids(results)
-    results = results.map { |result| result[:exam_token] }.uniq
-    results_pg_array = '{' + results.join(',') + '}'
-    result = @conn.exec_params('SELECT id, token FROM exams WHERE token = ANY($1::text[])', [results_pg_array])
+    results = "{ #{results.map { |result| result[:exam_token] }.uniq.join(',')} }"
+    result = @conn.exec_params('SELECT id, token FROM exams WHERE token = ANY($1::text[])', [results])
     result.each_with_object({}) { |row, hash| hash[row['token']] = row['id'] }
   end
 

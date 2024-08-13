@@ -17,6 +17,7 @@ jobs:
           - "5432:5432"
     env:
       DATABASE_URL: localhost
+      RACK_ENV: test
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
