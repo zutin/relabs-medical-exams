@@ -27,15 +27,6 @@ class ApiController
     @conn&.close
   end
 
-  def import(file)
-    return { error: 'Invalid file' } unless file&.path&.end_with?('.csv')
-
-    importer = DataImporter.new(file)
-    importer.import
-  rescue StandardError => e
-    { error: e }
-  end
-
   private
 
   def retrieve_exams
@@ -47,8 +38,8 @@ class ApiController
     SQL
 
     @conn.exec(query)
-  rescue PG::UndefinedTable
-    { error: 'No exams table found' }
+  rescue PG::Error => e
+    { error: "Database error: #{e.message}" }
   end
 
   def retrieve_exam_by_token(token)
@@ -61,8 +52,8 @@ class ApiController
     SQL
 
     @conn.exec_params(query, [token])
-  rescue PG::UndefinedTable
-    { error: 'No exams table found' }
+  rescue PG::Error => e
+    { error: "Database error: #{e.message}" }
   end
 
   def parse_exam(data)

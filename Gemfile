@@ -6,6 +6,7 @@ gem 'csv'
 gem 'pg'
 gem 'puma'
 gem 'rack'
+gem 'sidekiq'
 gem 'sinatra'
 
 group :development, :test do

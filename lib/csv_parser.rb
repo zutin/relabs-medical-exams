@@ -2,11 +2,11 @@ require 'csv'
 
 class CsvParser
   def initialize(file)
-    @file = file
+    @file = file.is_a?(String) && file.include?(';') ? file : File.read(file)
   end
 
   def parse
-    rows = CSV.read(@file, col_sep: ';', headers: true)
+    rows = CSV.parse(@file, col_sep: ';', headers: true)
     data = { 'patients' => [], 'doctors' => [], 'exams' => [], 'results' => [] }
 
     rows.map do |row|

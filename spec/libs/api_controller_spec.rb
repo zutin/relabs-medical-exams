@@ -36,32 +36,4 @@ RSpec.describe 'ApiController' do
       end
     end
   end
-
-  describe '#import' do
-    context 'when the file is valid' do
-      it 'successfully imports the file' do
-        file = Rack::Test::UploadedFile.new('spec/fixtures/test.csv', 'text/csv')
-        api.import(file)
-
-        count = Database.connect.exec('SELECT * FROM patients').count
-
-        expect(count).to eq(2)
-      end
-    end
-
-    context 'when the file is invalid' do
-      it 'raises an error' do
-        file = Rack::Test::UploadedFile.new('spec/fixtures/docs-para-estudo.xml', 'text/xml')
-        result = api.import(file)
-        expect(result).to eq({ error: 'Invalid file' })
-      end
-    end
-
-    context 'when the file is not found' do
-      it 'raises an error' do
-        result = api.import(nil)
-        expect(result).to eq({ error: 'Invalid file' })
-      end
-    end
-  end
 end

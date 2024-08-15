@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'rack/handler/puma'
+require_relative 'jobs/import_csv_job'
 require_relative 'lib/api_controller'
 require_relative 'lib/database'
 
@@ -33,11 +34,11 @@ post '/import' do
     return status :bad_request
   end
 
-  file = params[:file][:tempfile]
-  response = ApiController.new
-  response.import(file)
+  file_to_json = params[:file][:tempfile].read.force_encoding('UTF-8')
+  ImportCsvJob.perform_async(file_to_json)
   status :ok
 rescue StandardError => e
+  logger.error "Error while importing CSV: #{e.message}"
   status :internal_server_error
   { error: e.message }.to_json
 end

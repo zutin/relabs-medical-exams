@@ -1,3 +1,4 @@
+require 'json'
 require_relative 'csv_parser'
 require_relative 'database'
 

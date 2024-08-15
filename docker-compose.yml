@@ -5,6 +5,8 @@ services:
     command: bash -c "bundle install && ruby server.rb"
     depends_on:
       - db
+      - redis
+      - sidekiq
     ports:
       - "3000:3000"
     volumes:
@@ -12,6 +14,7 @@ services:
       - rubygems:/usr/local/bundle
     environment:
       - DATABASE_URL=db
+      - REDIS_URL=redis://redis:6379/0
 
   test:
     image: ruby:3.3.4
@@ -38,6 +41,23 @@ services:
     networks:
       test:
 
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  sidekiq:
+    image: ruby:3.3.4
+    working_dir: /app/medical-exams
+    volumes:
+      - .:/app/medical-exams
+      - rubygems:/usr/local/bundle
+    command: bash -c "bundle install && bundle exec sidekiq -r ./jobs/import_csv_job.rb"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - redis
+
   db:
     image: postgres:latest
     environment:
@@ -53,7 +73,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_DB: medical-exams
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       test:
         aliases:
