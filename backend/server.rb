@@ -2,7 +2,6 @@ require 'sinatra'
 require 'rack/handler/puma'
 require_relative 'jobs/import_csv_job'
 require_relative 'lib/api_controller'
-require_relative 'lib/database'
 
 get '/tests' do
   response = ApiController.new
@@ -41,16 +40,6 @@ rescue StandardError => e
   logger.error "Error while importing CSV: #{e.message}"
   status :internal_server_error
   { error: e.message }.to_json
-end
-
-get '/dropdb' do
-  Database.drop
-  'Database dropped!'
-end
-
-get '/createdb' do
-  Database.create
-  'Database created!'
 end
 
 unless ENV['RACK_ENV'] == 'test'
