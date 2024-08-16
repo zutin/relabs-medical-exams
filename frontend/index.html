@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReLabs - Medical Exams</title>
+  </head>
+  <body class="bg-[#0A0A0A] text-white">
+    <header id="navbar" class="bg-[#121212] w-full h-14 flex items-center">
+      <span class="ml-8 text-2xl font-semibold">Rebase Labs</span>
+      <form id="uploadForm" method="post" enctype="multipart/form-data" class="flex ml-auto mx-8">
+        <div class="flex gap-x-4">
+          <label class="flex flex-row items-center px-2 gap-x-2 text-white tracking-wide uppercase cursor-pointer hover:text-[#ADD8E6] transition-all duration-300">
+            <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+            </svg>
+            <span id="fileLabel" class="text-sm leading-normal">Selecione um arquivo</span>
+            <input type="file" id="fileInput" class="hidden" />
+          </label>
+          <button id="sendFile" type="button">Enviar</button>
+        </div>
+      </form>
+    </header>
+
+    <div id="main" class="flex flex-col gap-y-8 md:flex-row h-screen items-center p-8 justify-between">
+
+      <div class="w-screen h-screen max-w-screen-xl mx-auto px-6">
+        <div class="flex justify-center p-4 px-3 py-10">
+          <div class="w-full max-w-md">
+            <div class="bg-[#121212] shadow-md rounded-lg px-3 py-2 mb-4">
+
+              <div class="block text-white text-lg font-semibold py-2 px-2">
+                Lista de exames
+              </div>
+
+              <div class="flex items-center bg-gray-200 rounded-md">
+                <div class="pl-2">
+                  <svg class="fill-current text-gray-500 w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"> <path class="heroicon-ui" d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
+                  </svg>
+                </div>
+                <input
+                  class="w-full rounded-md bg-gray-200 text-gray-700 leading-tight focus:outline-none py-2 px-2"
+                  id="search-query" type="text" placeholder="Busque por nome ou token">
+              </div>
+              <div id="exam-list" class="py-3 text-sm">Nenhum exame existente.</div>
+              <div id="pagination-controls" class="flex justify-between mt-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="exam-container" class="w-screen h-screen hidden max-w-screen-xl mx-auto px-6">
+        <div class="flex justify-center p-4 px-3 py-10">
+          <div class="w-full max-w-md">
+            <div class="bg-[#121212] shadow-md rounded-lg px-3 py-2 mb-4">
+              <span id="exam-close" class="text-white text-sm font-semibold py-2 px-2 cursor-pointer hover:underline hover:text-[#ADD8E6]">✖</span>
+              <span id="exam-token" class="block text-white text-lg font-semibold py-2 px-2 text-center"></span>
+              <div id="exam-buttons" class="flex justify-around mt-2">
+                <button id="dados-btn">Dados</button>
+                <button id="doutor-btn">Doutor</button>
+                <button id="resultados-btn">Amostras</button>
+              </div>
+              <div id="exam-details" class="py-3 text-sm font-semibold gap-y-2 flex flex-col mt-2"></div>
+            </div> 
+          </div> 
+        </div> 
+      </div> 
+
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

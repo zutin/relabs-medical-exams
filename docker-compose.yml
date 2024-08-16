@@ -1,5 +1,5 @@
 services:
-  web:
+  backend:
     image: ruby:3.3.4
     working_dir: /app/medical-exams
     command: bash -c "bundle install && ruby server.rb"
@@ -15,6 +15,17 @@ services:
     environment:
       - DATABASE_URL=db
       - REDIS_URL=redis://redis:6379/0
+
+  frontend:
+    image: node
+    working_dir: /app/frontend-medical-exams
+    volumes:
+      - ./frontend:/app/frontend-medical-exams
+    command: bash -c "npm install && npm run dev"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
 
   test:
     image: ruby:3.3.4

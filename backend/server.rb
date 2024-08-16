@@ -3,6 +3,16 @@ require 'rack/handler/puma'
 require_relative 'jobs/import_csv_job'
 require_relative 'lib/api_controller'
 
+before do
+  headers['Access-Control-Allow-Methods'] = 'GET, POST'
+  headers['Access-Control-Allow-Origin'] = '*'
+end
+
+options '*' do
+  response.headers['Access-Control-Allow-Origin'] = '*'
+  response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+end
+
 get '/tests' do
   response = ApiController.new
 

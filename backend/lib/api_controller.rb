@@ -32,8 +32,8 @@ class ApiController
   def retrieve_exams
     query = <<-SQL
       SELECT exams.token, exams.date, patients.cpf, patients.name as patient_name, patients.email, patients.birthday,
-      doctors.crm, doctors.crm_state, doctors.name as doctor_name, exam_results.exam_type, exam_results.limits,
-      exam_results.result FROM exams INNER JOIN patients ON exams.patient_id = patients.id
+      doctors.crm, doctors.crm_state, doctors.name as dr_name, exam_results.exam_type, exam_results.limits,
+      exam_results.result, doctors.email as dr_email FROM exams INNER JOIN patients ON exams.patient_id = patients.id
       INNER JOIN doctors ON exams.doctor_id = doctors.id LEFT JOIN exam_results ON exams.id = exam_results.exam_id
     SQL
 
@@ -45,8 +45,8 @@ class ApiController
   def retrieve_exam_by_token(token)
     query = <<~SQL
       SELECT exams.token, exams.date, patients.cpf, patients.name as patient_name, patients.email, patients.birthday,
-      doctors.crm, doctors.crm_state, doctors.name as doctor_name, exam_results.exam_type, exam_results.limits,
-      exam_results.result FROM exams INNER JOIN patients ON exams.patient_id = patients.id
+      doctors.crm, doctors.crm_state, doctors.name as dr_name, exam_results.exam_type, exam_results.limits,
+      exam_results.result, doctors.email as dr_email FROM exams INNER JOIN patients ON exams.patient_id = patients.id
       INNER JOIN doctors ON exams.doctor_id = doctors.id LEFT JOIN exam_results ON exams.id = exam_results.exam_id
       WHERE exams.token = $1
     SQL
@@ -61,7 +61,7 @@ class ApiController
     {
       result_token: exam['token'], result_date: exam['date'],
       cpf: exam['cpf'], name: exam['patient_name'], email: exam['email'], birthday: exam['birthday'],
-      doctor: { crm: exam['crm'], crm_state: exam['crm_state'], name: exam['doctor_name'] },
+      doctor: { crm: exam['crm'], crm_state: exam['crm_state'], name: exam['dr_name'], email: exam['dr_email'] },
       tests: data.map { |result| { type: result['exam_type'], limits: result['limits'], result: result['result'] } }
     }
   rescue StandardError
