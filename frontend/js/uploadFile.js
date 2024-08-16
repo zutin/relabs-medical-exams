@@ -12,10 +12,18 @@ export function uploadFile() {
       method: 'POST',
       body: formData,
     })
-      .then((response) => console.log(response)) // aqui retorna success true e status 200
+    .then((response) => {
+      if (response.ok) {
+        return console.log(response);
+      } else {
+        alert('Envie somente arquivos .csv');
+        throw new Error('Falha no envio do arquivo');
+      }
+    })
       .then((data) => {
         console.log(data);
         fileInput.files = null;
+        location.reload();
       })
       .catch((error) => {
         console.error('Error:', error);

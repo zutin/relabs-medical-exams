@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Desenvolvido para o Rebase Labs utilizando Ruby com Sinatra, Sidekiq e Redis para o back-end, utilizando Node (Vite) como servidor para o front-end e PostgreSQL para banco de dados.
+Developed for Rebase Labs using Ruby with Sinatra, Sidekiq and Redis for the back-end, using Node (Vite) as the server for the front-end and PostgreSQL for the database.
 
 <p align="center">
   <a href="https://www.ruby-lang.org/">

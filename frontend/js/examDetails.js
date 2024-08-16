@@ -9,7 +9,13 @@ export function getExamDetails(exam_token) {
   container.classList.remove('hidden');
 
   fetch(endpoint + 'test/' + exam_token)
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Falha ao buscar detalhes do exame');
+      }
+    })
     .then((data) => {
       let examData = data;
 
