@@ -2,7 +2,7 @@ require 'pg'
 
 class Database
   def self.connect
-    host = ENV['DATABASE_URL'] || 'db'
+    host = ENV['DATABASE_URL'] || 'localhost'
     PG.connect(host:, dbname: 'medical-exams', user: 'postgres', password: 'postgres')
   end
 

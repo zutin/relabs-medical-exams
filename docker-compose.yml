@@ -27,31 +27,6 @@ services:
     depends_on:
       - backend
 
-  test:
-    image: ruby:3.3.4
-    working_dir: /app/medical-exams
-    command: bash -c "bundle install && bundle exec rspec"
-    depends_on:
-      - db-test
-    volumes:
-      - ./backend:/app/medical-exams
-      - rubygems:/usr/local/bundle
-    environment:
-      - DATABASE_URL=db
-      - RACK_ENV=test
-    networks:
-      test:
-
-  lint:
-    image: ruby:3.3.4
-    working_dir: /app/medical-exams
-    command: bash -c "bundle install && bundle exec rubocop"
-    volumes:
-      - ./backend:/app/medical-exams
-      - rubygems:/usr/local/bundle
-    networks:
-      test:
-
   redis:
     image: redis
     ports:
@@ -78,23 +53,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./database:/var/lib/postgresql/data
+      - database:/var/lib/postgresql/data
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
-
-  db-test:
-    image: postgres:latest
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: trust
-      POSTGRES_DB: medical-exams
-    ports:
-      - "5433:5432"
-    networks:
-      test:
-        aliases:
-          - db
 
 volumes:
   rubygems:
-
-networks:
-  test:
+  database:
