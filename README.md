@@ -72,14 +72,33 @@ You can run tests by navigating to the project folder:
 ```bash
 cd relabs-medical-exams
 ```
-Use the *RSpec test container* to run all tests:
+Use the *RSpec test command* to run all tests:
 ```bash
-docker compose up test
+docker compose run -e RACK_ENV=test backend bundle exec rspec
 ```
 
-You can also run *Rubocop lint container* using the following command:
+You can also run *Rubocop lint command* using the following command:
 ```bash
-docker compose up lint
+docker compose run -e RACK_ENV=test backend bundle exec rubocop
+```
+
+## Using the import_from_csv script
+You can use the `import_from_csv` Ruby script to import data from a CSV file. The script is located in the `backend` folder.
+
+Usage:
+```bash
+ruby import_from_csv.rb -f <file_path>
+```
+```bash
+ruby import_from_csv.rb --file <file_path>
+```
+
+In case you need help, you can use the `-h` or `--help` flag:
+```bash
+ruby import_from_csv.rb -h
+```
+```bash
+ruby import_from_csv.rb --help
 ```
 
 ## API Docs
